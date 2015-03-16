@@ -1,22 +1,18 @@
-<html>
-	<head>
-		<title>Link Sharer</title>
-		<link rel="stylesheet" href="styles.css" type="text/css">
-	</head>
+<?php
+namespace Controllers;
+
+	class SignupController
+	{
+
 	
-	<body>
-		
-			<?php
-			
-			
-			
+	public function post(){	
 
 			if ($_POST["username"] && $_POST["password"])
 			{
 
-							include('credentials.php');
+				require(__DIR__ . '/../../config/credentials.php');
 
-				$con=  mysqli_connect($creden['host'],$creden['username'],$creden['passkey'],$creden['link_sharer']);
+				$con=  mysqli_connect($creden['host'],$creden['username'],$creden['passkey'],$creden['db']);
 	
 				if(mysqli_connect_errno()){
 					die("Connection failed: " . mysqli_connect_errno());
@@ -56,11 +52,8 @@
 				
 
 			}else{
-				header("Location: index.php");
+				header("Location: front.php");
 			}
-			
+}
+}			
 			?>
-			
-		
-	</body>	
-</html>

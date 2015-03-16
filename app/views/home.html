@@ -1,20 +1,9 @@
-<?php
-session_start();
-//var_dump((isset($_SESSION['status'])));
-//exit();
-if (!(isset($_SESSION['status'])) || $_SESSION['status']==0){
-	$_SESSION['status']=0;
-	header("Location: index.php");
-	exit();
-}
 
-
-?>
 <html>
 <head>
 	<title>Useless Links</title>
-	<link rel="stylesheet" href="styles.css" type="text/css">
-	<script src="jquery.min.js"></script>
+	<link rel="stylesheet" href="/css/styles.css" type="text/css">
+	<script src="/js/jquery.min.js"></script>
 </head>
 
 <body>
@@ -45,7 +34,7 @@ if (!(isset($_SESSION['status'])) || $_SESSION['status']==0){
 
 				<div style="float:right;">
 					<div class="box" style="float:right;width:200px">
-						<p class="headu">Signed in as :</p>@<?php echo $_SESSION['username'] . ": " . $_SESSION['name']; ?>
+						<p class="headu">Signed in as :</p>@{{username}}: {{name}}
 						<br><br><button onclick="window.location='logout.php';">Log Out</button>
 
 					</div>
@@ -66,69 +55,28 @@ if (!(isset($_SESSION['status'])) || $_SESSION['status']==0){
 								document.getElementById('collection').innerHTML="<div class='oneset box'><div class='times'>	Just now</div><div class='linkone'>" + 
 								"<p class='headu link'><a class='ref' href='" + document.getElementById('favlink').value + "'>" +
 									 document.getElementById('favlink').value + 
-								"</a></p><p class='name'>"  +  '<?php echo($_SESSION['username']); ?>' + "<br></p></div></div>" + document.getElementById('collection').innerHTML	;
+								"</a></p><p class='name'>"  +  '{{ username }}' + "<br></p></div></div>" + document.getElementById('collection').innerHTML	;
 								document.getElementById('favlink').value='';
 							}}
 						</script>
 					</div>
 					<div id='collection'>
-					<?php
-								include('credentials.php');
-
-				$con=  mysqli_connect($creden['host'],$creden['username'],$creden['passkey'],$creden['link_sharer']);
-	
-					if(mysqli_connect_errno()){
-						die("Connection failed: " . mysqli_connect_errno());
-					}
-				//echo $con;
-					$query="SELECT * FROM links ORDER BY time DESC";
-
-					$result = mysqli_query($con,$query);
-				//var_dump($con);
-
-					while ($row = $result->fetch_assoc()) {
-						?>
+					{% for obj in objs %}
 						<div class="oneset box" >
 							<div class="times">
-								<?php
-
-								$tstamp = DateTime::createFromFormat("Y-m-d H:i:s",$row['time']);
-
-								$tdiff= $tstamp->diff(new DateTime());
-								if($tdiff-> y){
-									echo($tdiff-> y . " years ago");
-								} elseif ($tdiff-> m) {
-									echo($tdiff-> m . " months ago");
-								} elseif ($tdiff-> d) {
-									echo($tdiff-> d . " days ago");
-								} elseif ($tdiff-> h) {
-									echo($tdiff-> h . " hours ago");
-								} elseif ($tdiff-> i) {
-									echo($tdiff-> i . " minutes ago");
-								} elseif ($tdiff-> s) {
-									echo($tdiff-> s . " seconds ago");
-								}
-
-
-								?>
+								{{ obj['timr'] }}
 							</div>
 							<div class="linkone">
-								<p class="headu link"><a class="ref" href = <?php	echo $row["url"] ?>>
-									<?php echo $row["url"];?>
+								<p class="headu link"><a class="ref" href = {{obj['url']}}>
+									{{ obj['url']}}
 
 								</a></p>
 								<p class="name">
-									<?php
-									echo $row["username"] . "<br>";
-									?>
+									{{ obj['username']}}
 								</p>
 							</div>
 						</div>
-						<?php
-
-					}
-
-					?>
+						{% endfor %}
 					</div>
 				</div>
 
